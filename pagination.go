@@ -38,22 +38,14 @@ func New(current, per, count int) (Pagination, error) {
 		return nil, fmt.Errorf("can't use records count: %d", count)
 	}
 
-	last := calcLast(count, per)
-
-	current = calcCurrent(current, per, last, count)
-
-	first := calcFirst(count)
-	previous := calcPrevious(current, first)
-	next := calcNext(current, last)
-
 	return &pagination{
 		Count:    count,
 		Per:      per,
-		Current:  current,
-		First:    first,
-		Last:     last,
-		Previous: previous,
-		Next:     next,
+		Current:  calcCurrent(current, per, count),
+		First:    calcFirst(),
+		Last:     calcLast(count, per),
+		Previous: calcPrevious(current, per, count),
+		Next:     calcNext(current, per, count),
 	}, nil
 }
 
@@ -110,39 +102,33 @@ func (p *pagination) FilterCurrent(i interface{}) (interface{}, error) {
 	return v.Slice(currentFirstRecIdx, currentLastRecIdx).Interface(), nil
 }
 
-func calcFirst(count int) int {
-	if count > 0 {
-		return 1
-	}
-	return 0
+func calcFirst() int {
+	return 1
 }
 
 func calcLast(count, per int) int {
 	return (count + (per - 1)) / per
 }
 
-func calcCurrent(current, per, last, count int) int {
-	if current == 0 {
-		return 1
-	}
-
+func calcCurrent(current, per, count int) int {
 	if (current-1)*per >= count {
-		return last
+		return calcLast(count, per)
 	}
-
 	return current
 }
 
-func calcNext(current, last int) int {
-	if current < last {
-		return current + 1
+func calcNext(current, per, count int) int {
+	current = calcCurrent(current, per, count)
+	if last := calcLast(count, per); current >= last {
+		return last
 	}
-	return 0
+	return current + 1
 }
 
-func calcPrevious(current, first int) int {
-	if current > first {
-		return current - 1
+func calcPrevious(current, per, count int) int {
+	current = calcCurrent(current, per, count)
+	if first := calcFirst(); current <= first {
+		return first
 	}
-	return 0
+	return current - 1
 }

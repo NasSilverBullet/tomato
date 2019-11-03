@@ -14,10 +14,13 @@ func TestNew(t *testing.T) {
 		count       int
 		expectError bool
 	}{
-		{"Success", 3, 20, 60, false},
+		{"Success", 2, 20, 60, false},
+		{"SuccessReCalcCurrent", 5, 20, 60, false},
+		{"SuccessNextIsLast", 3, 20, 60, false},
+		{"SuccessPreviousIsFirst", 1, 20, 60, false},
 		{"InvalidCurrent", 0, 20, 60, true},
-		{"InvalidPer", 3, 0, 60, true},
-		{"InvalidCount", 3, 20, -1, true},
+		{"InvalidPer", 2, 0, 60, true},
+		{"InvalidCount", 2, 20, -1, true},
 	}
 
 	for _, tt := range tests {
