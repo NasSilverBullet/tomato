@@ -26,7 +26,7 @@ type pagination struct {
 }
 
 func New(current, per, count int) (Pagination, error) {
-	if current < 0 {
+	if current < 1 {
 		return nil, fmt.Errorf("can't use current: %d", current)
 	}
 
