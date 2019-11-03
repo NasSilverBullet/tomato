@@ -31,3 +31,26 @@ func TestNew(t *testing.T) {
 		})
 	}
 }
+
+func TestPaginationGetCurrent(t *testing.T) {
+	tests := []struct {
+		name    string
+		current int
+		per     int
+		count   int
+		want    int
+	}{
+		{"Success", 2, 20, 60, 2},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p, err := tomato.New(tt.current, tt.per, tt.count)
+			if err != nil {
+				t.Errorf("Unexpected error %v", err)
+			}
+			if got := p.GetCurrent(); tt.want != got {
+				t.Errorf("p.GetCurrent() => got %d , but want %d", got, tt.want)
+			}
+		})
+	}
+}
