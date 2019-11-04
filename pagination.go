@@ -13,6 +13,7 @@ type Pagination interface {
 	GetLast() int
 	GetPrevious() int
 	GetNext() int
+	FilterCurrent(i interface{}) (interface{}, error)
 }
 
 type pagination struct {

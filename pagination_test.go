@@ -1,6 +1,7 @@
 package tomato_test
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/NasSilverBullet/tomato"
@@ -188,6 +189,36 @@ func TestPaginationGetCount(t *testing.T) {
 			}
 			if got := p.GetCount(); tt.want != got {
 				t.Errorf("p.GetCount() => got %d , but want %d", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestPaginationFilterCurrent(t *testing.T) {
+	tests := []struct {
+		name    string
+		current int
+		per     int
+		count   int
+		i       []struct{ id int }
+		want    []struct{ id int }
+	}{
+		{"Success", 2, 2, 5, []struct{ id int }{{1}, {2}, {3}, {4}, {5}}, []struct{ id int }{{3}, {4}}},
+		{"SuccessLastPage", 3, 2, 5, []struct{ id int }{{1}, {2}, {3}, {4}, {5}}, []struct{ id int }{{5}}},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p, err := tomato.New(tt.current, tt.per, tt.count)
+			if err != nil {
+				t.Errorf("Unexpected error %v", err)
+			}
+			got, err := p.FilterCurrent(tt.i)
+			if err != nil {
+				t.Errorf("Unexpected error %v", err)
+			}
+			if !reflect.DeepEqual(tt.want, got) {
+				t.Errorf("p.FilterCurrent(%v) => got %v , but want %v", tt.i, got, tt.want)
 			}
 		})
 	}
