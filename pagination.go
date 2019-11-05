@@ -85,6 +85,10 @@ func (p *pagination) FilterCurrent(i interface{}) (interface{}, error) {
 
 	v := reflect.ValueOf(i)
 
+	if v.Len() != p.Count {
+		return nil, fmt.Errorf("length of Slice doesn't match length of pagination")
+	}
+
 	currentFirstRecIdx := p.Per * (p.Current - 1)
 
 	currentLastRecIdx := p.Per * p.Current

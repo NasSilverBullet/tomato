@@ -223,3 +223,25 @@ func TestPaginationFilterCurrent(t *testing.T) {
 		})
 	}
 }
+
+func TestPaginationFilterCurrentExceptSlice(t *testing.T) {
+	p, err := tomato.New(1, 1, 1)
+	if err != nil {
+		t.Errorf("Unexpected error %v", err)
+	}
+
+	if _, err := p.FilterCurrent(struct{}{}); err == nil {
+		t.Errorf("p.FilertCurrent(struct{}{}) => err is nil (shoud NOT)")
+	}
+}
+
+func TestPaginationFilterCurrentNoMatchLength(t *testing.T) {
+	p, err := tomato.New(1, 20, 5)
+	if err != nil {
+		t.Errorf("Unexpected error %v", err)
+	}
+
+	if _, err := p.FilterCurrent([]struct{}{{}, {}}); err == nil {
+		t.Errorf("p.FilertCurrent([]struct{}{}) => err is nil (shoud NOT)")
+	}
+}
