@@ -89,22 +89,22 @@ func (p *pagination) FilterCurrent(i interface{}) (interface{}, error) {
 		return nil, fmt.Errorf("length of Slice doesn't match length of pagination")
 	}
 
-	currentFirstRecIdx := p.Per * (p.Current - 1)
+	currentFirstIndex := p.Per * (p.Current - 1)
 
-	currentLastRecIdx := p.Per * p.Current
-	if currentLastRecIdx > p.Count {
-		currentLastRecIdx = p.Count
+	currentLastIndex := p.Per * p.Current
+	if currentLastIndex > p.Count {
+		currentLastIndex = p.Count
 	}
 
-	if currentFirstRecIdx > currentLastRecIdx {
+	if currentFirstIndex > currentLastIndex {
 		return nil, fmt.Errorf("pagination's fields is broken")
 	}
 
-	if v.Len() < currentLastRecIdx {
+	if v.Len() < currentLastIndex {
 		return nil, fmt.Errorf("Can't filter %v", i)
 	}
 
-	return v.Slice(currentFirstRecIdx, currentLastRecIdx).Interface(), nil
+	return v.Slice(currentFirstIndex, currentLastIndex).Interface(), nil
 }
 
 func calcFirst() int {
